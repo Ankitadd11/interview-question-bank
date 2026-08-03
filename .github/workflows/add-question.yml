@@ -1,0 +1,152 @@
+name: Add question to question bank
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  add-question:
+    if: >
+      startsWith(github.event.issue.title, 'Add question:') &&
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'),
+      github.event.issue.author_association)
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Add question to selected file
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          node <<'NODE'
+          const fs = require("fs");
+          const path = require("path");
+
+          const body = process.env.ISSUE_BODY || "";
+
+          function readSection(name, nextSection) {
+            const startMarker = `### ${name}`;
+            const start = body.indexOf(startMarker);
+
+            if (start === -1) {
+              throw new Error(`Missing section: ${name}`);
+            }
+
+            const contentStart = start + startMarker.length;
+            const end = nextSection
+              ? body.indexOf(`### ${nextSection}`, contentStart)
+              : body.length;
+
+            if (nextSection && end === -1) {
+              throw new Error(`Missing section: ${nextSection}`);
+            }
+
+            return body
+              .slice(contentStart, end)
+              .trim();
+          }
+
+          const category = readSection("Category", "File");
+          const fileName = readSection("File", "Question");
+          const question = readSection("Question", "Answer");
+          const answer = readSection("Answer");
+
+          const allowedCategories = [
+            "React",
+            "NodeJS",
+            "TypeScript",
+            "JavaScript",
+            "Microservices",
+            "AWS",
+            "System-Design",
+            "Behavioural",
+            "Project-Based"
+          ];
+
+          if (!allowedCategories.includes(category)) {
+            throw new Error("Invalid category.");
+          }
+
+          if (
+            !/^[a-zA-Z0-9._-]+\.md$/.test(fileName) ||
+            fileName === "." ||
+            fileName === ".."
+          ) {
+            throw new Error("Invalid filename.");
+          }
+
+          if (!question || !answer) {
+            throw new Error("Question and answer are required.");
+          }
+
+          const targetFile = path.join(
+            "questions",
+            category,
+            fileName
+          );
+
+          if (!fs.existsSync(targetFile)) {
+            throw new Error(`Selected file does not exist: ${targetFile}`);
+          }
+
+          const existingContent = fs.readFileSync(targetFile, "utf8");
+
+          const questionPattern = /^## Q(\d+)\./gm;
+          let match;
+          let highestNumber = 0;
+
+          while ((match = questionPattern.exec(existingContent)) !== null) {
+            highestNumber = Math.max(
+              highestNumber,
+              Number(match[1])
+            );
+          }
+
+          const nextNumber = highestNumber + 1;
+
+          const newEntry = [
+            `## Q${nextNumber}. ${question}`,
+            "",
+            "### Answer",
+            "",
+            answer,
+            "",
+            "---",
+            ""
+          ].join("\n");
+
+          const separator =
+            existingContent.trim().length > 0 ? "\n\n" : "";
+
+          fs.writeFileSync(
+            targetFile,
+            existingContent.trimEnd() + separator + newEntry,
+            "utf8"
+          );
+
+          console.log(`Added Q${nextNumber} to ${targetFile}`);
+          NODE
+
+      - name: Commit the updated question file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add questions
+          git commit -m "Add question from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Close the processed issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue close "$ISSUE_NUMBER" \
+            --comment "Question added successfully to the selected file."
