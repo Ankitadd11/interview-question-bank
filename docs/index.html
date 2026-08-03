@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Interview Question Bank</title>
 
@@ -15,8 +19,8 @@
       margin: 0;
       padding: 30px 16px;
       background: #f4f6f8;
-      font-family: Arial, sans-serif;
       color: #24292f;
+      font-family: Arial, sans-serif;
     }
 
     .container {
@@ -54,8 +58,15 @@
     }
 
     textarea {
-      resize: vertical;
       min-height: 110px;
+      resize: vertical;
+    }
+
+    select:focus,
+    textarea:focus,
+    input:focus {
+      border-color: #0969da;
+      outline: 2px solid rgba(9, 105, 218, 0.2);
     }
 
     button {
@@ -77,12 +88,13 @@
 
     button:disabled {
       background: #94d3a2;
-      cursor: not-allowed;
+      cursor: wait;
     }
 
     #message {
+      min-height: 24px;
       margin-top: 16px;
-      color: #cf222e;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -92,7 +104,8 @@
     <h1>Interview Question Bank</h1>
 
     <p class="description">
-      Select a category and file, then enter the interview question and answer.
+      Select a category and file, then enter the interview
+      question and answer.
     </p>
 
     <form id="questionForm">
@@ -114,7 +127,9 @@
       <label for="file">File</label>
 
       <select id="file" required disabled>
-        <option value="">Select a category first</option>
+        <option value="">
+          Select a category first
+        </option>
       </select>
 
       <label for="question">Question</label>
@@ -135,142 +150,234 @@
 
       <label for="appPassword">App Password</label>
 
-<input
-  id="appPassword"
-  type="password"
-  placeholder="Enter the app password"
-  autocomplete="current-password"
-  required
->
+      <input
+        id="appPassword"
+        type="password"
+        placeholder="Enter the app password"
+        autocomplete="current-password"
+        required
+      >
 
-<button id="submitButton" type="submit">
-  Add Question
-</button>
       <button id="submitButton" type="submit">
-        Submit Question
+        Add Question
       </button>
 
-      <p id="message"></p>
+      <p id="message" role="status"></p>
     </form>
   </main>
 
   <script>
-    const categoryElement = document.getElementById("category");
-    const fileElement = document.getElementById("file");
-    const formElement = document.getElementById("questionForm");
-    const messageElement = document.getElementById("message");
+    const githubOwner = "Ankitadd11";
+    const githubRepository = "interview-question-bank";
 
-    // GitHub Pages URL:
-    // https://USERNAME.github.io/REPOSITORY/
-    const githubOwner = window.location.hostname.split(".")[0];
-    const githubRepository = window.location.pathname
-      .split("/")
-      .filter(Boolean)[0];
+    const categoryElement =
+      document.getElementById("category");
 
-    categoryElement.addEventListener("change", loadFiles);
+    const fileElement =
+      document.getElementById("file");
+
+    const formElement =
+      document.getElementById("questionForm");
+
+    const messageElement =
+      document.getElementById("message");
+
+    const submitButton =
+      document.getElementById("submitButton");
+
+    categoryElement.addEventListener(
+      "change",
+      loadFiles
+    );
 
     async function loadFiles() {
       const category = categoryElement.value;
 
-      fileElement.innerHTML = "";
       fileElement.disabled = true;
+
       messageElement.textContent = "";
 
       if (!category) {
         fileElement.innerHTML =
-          '<option value="">Select a category first</option>';
+          '<option value="">' +
+          "Select a category first" +
+          "</option>";
+
         return;
       }
 
       fileElement.innerHTML =
-        '<option value="">Loading files...</option>';
+        '<option value="">' +
+        "Loading files..." +
+        "</option>";
 
       const apiUrl =
-        `https://api.github.com/repos/${githubOwner}/${githubRepository}` +
-        `/contents/questions/${encodeURIComponent(category)}`;
+        `https://api.github.com/repos/` +
+        `${githubOwner}/${githubRepository}` +
+        `/contents/questions/` +
+        encodeURIComponent(category);
 
       try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+          headers: {
+            Accept: "application/vnd.github+json"
+          }
+        });
 
         if (!response.ok) {
-          throw new Error("Could not load files from this category.");
+          throw new Error(
+            "Could not load files from this category."
+          );
         }
 
         const items = await response.json();
 
-        const markdownFiles = items.filter(item =>
-          item.type === "file" &&
-          item.name.toLowerCase().endsWith(".md")
+        const markdownFiles = items.filter(
+          item =>
+            item.type === "file" &&
+            item.name.toLowerCase().endsWith(".md")
         );
 
         fileElement.innerHTML =
-          '<option value="">Select a file</option>';
+          '<option value="">' +
+          "Select a file" +
+          "</option>";
 
         markdownFiles.forEach(file => {
-          const option = document.createElement("option");
+          const option =
+            document.createElement("option");
+
           option.value = file.name;
           option.textContent = file.name;
+
           fileElement.appendChild(option);
         });
 
-        fileElement.disabled = false;
-
         if (markdownFiles.length === 0) {
           fileElement.innerHTML =
-            '<option value="">No Markdown files found</option>';
-          fileElement.disabled = true;
+            '<option value="">' +
+            "No Markdown files found" +
+            "</option>";
+
+          messageElement.style.color = "#cf222e";
+
+          messageElement.textContent =
+            "No Markdown files were found in this category.";
+
+          return;
         }
+
+        fileElement.disabled = false;
       } catch (error) {
         fileElement.innerHTML =
-          '<option value="">Unable to load files</option>';
+          '<option value="">' +
+          "Unable to load files" +
+          "</option>";
 
+        messageElement.style.color = "#cf222e";
         messageElement.textContent = error.message;
       }
     }
 
-    formElement.addEventListener("submit", event => {
-      event.preventDefault();
+    formElement.addEventListener(
+      "submit",
+      async event => {
+        event.preventDefault();
 
-      const category = categoryElement.value;
-      const file = fileElement.value;
-      const question = document
-        .getElementById("question")
-        .value
-        .trim();
-      const answer = document
-        .getElementById("answer")
-        .value
-        .trim();
+        const category = categoryElement.value;
+        const file = fileElement.value;
 
-      if (!category || !file || !question || !answer) {
-        messageElement.textContent =
-          "Please complete every field.";
-        return;
+        const question = document
+          .getElementById("question")
+          .value
+          .trim();
+
+        const answer = document
+          .getElementById("answer")
+          .value
+          .trim();
+
+        const appPassword = document
+          .getElementById("appPassword")
+          .value;
+
+        if (
+          !category ||
+          !file ||
+          !question ||
+          !answer ||
+          !appPassword
+        ) {
+          messageElement.style.color = "#cf222e";
+
+          messageElement.textContent =
+            "Please complete every field.";
+
+          return;
+        }
+
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+          "Adding question...";
+
+        messageElement.textContent = "";
+
+        try {
+          const response = await fetch(
+            "/api/questions",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "X-App-Password": appPassword
+              },
+
+              body: JSON.stringify({
+                category,
+                file,
+                question,
+                answer
+              })
+            }
+          );
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              result.error ||
+              "Unable to add the question."
+            );
+          }
+
+          messageElement.style.color = "#1a7f37";
+
+          messageElement.textContent =
+            `${result.questionNumber} added ` +
+            `successfully to ${result.path}.`;
+
+          document
+            .getElementById("question")
+            .value = "";
+
+          document
+            .getElementById("answer")
+            .value = "";
+
+          document
+            .getElementById("question")
+            .focus();
+        } catch (error) {
+          messageElement.style.color = "#cf222e";
+          messageElement.textContent = error.message;
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = "Add Question";
+        }
       }
-
-      const issueTitle = `Add question: ${question.substring(0, 70)}`;
-
-      const issueBody = [
-        "### Category",
-        category,
-        "",
-        "### File",
-        file,
-        "",
-        "### Question",
-        question,
-        "",
-        "### Answer",
-        answer
-      ].join("\n");
-
-      const issueUrl =
-        `https://github.com/${githubOwner}/${githubRepository}/issues/new` +
-        `?title=${encodeURIComponent(issueTitle)}` +
-        `&body=${encodeURIComponent(issueBody)}`;
-
-      window.location.href = issueUrl;
-    });
+    );
   </script>
 </body>
 </html>
