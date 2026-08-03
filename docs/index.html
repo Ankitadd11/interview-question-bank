@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Interview Question Bank</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 16px;
+      background: #f4f6f8;
+      font-family: Arial, sans-serif;
+      color: #24292f;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .description {
+      margin-bottom: 24px;
+      color: #57606a;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 7px;
+      font-weight: 600;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 13px;
+      border: none;
+      border-radius: 6px;
+      background: #2da44e;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218739;
+    }
+
+    button:disabled {
+      background: #94d3a2;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin-top: 16px;
+      color: #cf222e;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>Interview Question Bank</h1>
+
+    <p class="description">
+      Select a category and file, then enter the interview question and answer.
+    </p>
+
+    <form id="questionForm">
+      <label for="category">Category</label>
+
+      <select id="category" required>
+        <option value="">Select a category</option>
+        <option value="React">React</option>
+        <option value="NodeJS">Node.js</option>
+        <option value="TypeScript">TypeScript</option>
+        <option value="JavaScript">JavaScript</option>
+        <option value="Microservices">Microservices</option>
+        <option value="AWS">AWS</option>
+        <option value="System-Design">System Design</option>
+        <option value="Behavioural">Behavioural</option>
+        <option value="Project-Based">Project-Based</option>
+      </select>
+
+      <label for="file">File</label>
+
+      <select id="file" required disabled>
+        <option value="">Select a category first</option>
+      </select>
+
+      <label for="question">Question</label>
+
+      <textarea
+        id="question"
+        placeholder="Enter the interview question"
+        required
+      ></textarea>
+
+      <label for="answer">Answer</label>
+
+      <textarea
+        id="answer"
+        placeholder="Enter the answer"
+        required
+      ></textarea>
+
+      <button id="submitButton" type="submit">
+        Submit Question
+      </button>
+
+      <p id="message"></p>
+    </form>
+  </main>
+
+  <script>
+    const categoryElement = document.getElementById("category");
+    const fileElement = document.getElementById("file");
+    const formElement = document.getElementById("questionForm");
+    const messageElement = document.getElementById("message");
+
+    // GitHub Pages URL:
+    // https://USERNAME.github.io/REPOSITORY/
+    const githubOwner = window.location.hostname.split(".")[0];
+    const githubRepository = window.location.pathname
+      .split("/")
+      .filter(Boolean)[0];
+
+    categoryElement.addEventListener("change", loadFiles);
+
+    async function loadFiles() {
+      const category = categoryElement.value;
+
+      fileElement.innerHTML = "";
+      fileElement.disabled = true;
+      messageElement.textContent = "";
+
+      if (!category) {
+        fileElement.innerHTML =
+          '<option value="">Select a category first</option>';
+        return;
+      }
+
+      fileElement.innerHTML =
+        '<option value="">Loading files...</option>';
+
+      const apiUrl =
+        `https://api.github.com/repos/${githubOwner}/${githubRepository}` +
+        `/contents/questions/${encodeURIComponent(category)}`;
+
+      try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error("Could not load files from this category.");
+        }
+
+        const items = await response.json();
+
+        const markdownFiles = items.filter(item =>
+          item.type === "file" &&
+          item.name.toLowerCase().endsWith(".md")
+        );
+
+        fileElement.innerHTML =
+          '<option value="">Select a file</option>';
+
+        markdownFiles.forEach(file => {
+          const option = document.createElement("option");
+          option.value = file.name;
+          option.textContent = file.name;
+          fileElement.appendChild(option);
+        });
+
+        fileElement.disabled = false;
+
+        if (markdownFiles.length === 0) {
+          fileElement.innerHTML =
+            '<option value="">No Markdown files found</option>';
+          fileElement.disabled = true;
+        }
+      } catch (error) {
+        fileElement.innerHTML =
+          '<option value="">Unable to load files</option>';
+
+        messageElement.textContent = error.message;
+      }
+    }
+
+    formElement.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const category = categoryElement.value;
+      const file = fileElement.value;
+      const question = document
+        .getElementById("question")
+        .value
+        .trim();
+      const answer = document
+        .getElementById("answer")
+        .value
+        .trim();
+
+      if (!category || !file || !question || !answer) {
+        messageElement.textContent =
+          "Please complete every field.";
+        return;
+      }
+
+      const issueTitle = `Add question: ${question.substring(0, 70)}`;
+
+      const issueBody = [
+        "### Category",
+        category,
+        "",
+        "### File",
+        file,
+        "",
+        "### Question",
+        question,
+        "",
+        "### Answer",
+        answer
+      ].join("\n");
+
+      const issueUrl =
+        `https://github.com/${githubOwner}/${githubRepository}/issues/new` +
+        `?title=${encodeURIComponent(issueTitle)}` +
+        `&body=${encodeURIComponent(issueBody)}`;
+
+      window.location.href = issueUrl;
+    });
+  </script>
+</body>
+</html>
