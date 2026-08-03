@@ -7,6 +7,7 @@ const ALLOWED_CATEGORIES = new Set([
   "TypeScript",
   "JavaScript",
   "Microservices",
+  "Micro-Frontend",
   "AWS",
   "System-Design",
   "Behavioural",
