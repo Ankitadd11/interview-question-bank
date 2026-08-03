@@ -1,1 +1,7 @@
+Q1. Explain your experience using AWS services and how they support cloud-native fintech solutions.
 
+Ans: My experience with AWS covers a breadth of services critical for building scalable, secure cloud-native fintech applications. I have worked with core services like AWS DynamoDB for managing NoSQL storage, Redis for caching and real-time data access, and AWS Lambda functions where appropriate for serverless computing needs.
+At Solace InfoTech, I integrated AWS with Node.js-based GraphQL APIs, leveraging AWS's managed services to enable high availability and scalability, which are crucial for transactional systems in fintech environments.
+Implementing security best practices in cloud deployments is paramount in fintech. My work ensured compliance with security policies by using AWS Identity and Access Management (IAM), encrypted storage, and secure communication protocols, aligning with Mastercard's emphasis on information security responsibilities.
+The cloud-native design also involved using container orchestration tools like Kubernetes, which complements my experience with monorepo and microservice architectures to allow smooth deployment, scaling, and management of fintech applications in a cloud environment.
+My practical exposure to designing applications that utilize AWS helped me understand optimizing costs, performance tuning, and leveraging managed services for durable and fault-tolerant applications that align perfectly with Mastercard’s needs for highly resilient financial systems.
