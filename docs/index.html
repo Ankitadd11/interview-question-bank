@@ -44,7 +44,8 @@
     }
 
     select,
-    textarea {
+    textarea,
+    input {
       width: 100%;
       padding: 12px;
       border: 1px solid #d0d7de;
@@ -132,6 +133,19 @@
         required
       ></textarea>
 
+      <label for="appPassword">App Password</label>
+
+<input
+  id="appPassword"
+  type="password"
+  placeholder="Enter the app password"
+  autocomplete="current-password"
+  required
+>
+
+<button id="submitButton" type="submit">
+  Add Question
+</button>
       <button id="submitButton" type="submit">
         Submit Question
       </button>
