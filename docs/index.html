@@ -345,10 +345,9 @@
           .value
           .trim();
 
-        const answer = document
-          .getElementById("answer")
-          .value
-          .trim();
+        const answer = answerEditor
+  .value()
+  .trim();
 
         const appPassword = document
           .getElementById("appPassword")
@@ -415,10 +414,8 @@
             .getElementById("question")
             .value = "";
 
-          document
-            .getElementById("answer")
-            .value = "";
-
+         answerEditor.value("");
+          
           document
             .getElementById("question")
             .focus();
