@@ -1,1 +1,714 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Interview Questions</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 16px;
+      background: #f4f6f8;
+      color: #24292f;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+    }
+
+    .header {
+      margin-bottom: 24px;
+      padding: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: #0969da;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb {
+      margin-top: 15px;
+      color: #57606a;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .category-button,
+    .file-button {
+      width: 100%;
+      padding: 18px;
+      border: 1px solid #d0d7de;
+      border-radius: 10px;
+      background: white;
+      color: #24292f;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .category-button:hover,
+    .file-button:hover {
+      border-color: #0969da;
+      background: #f6f8fa;
+    }
+
+    .section-title {
+      margin: 25px 0 15px;
+    }
+
+    .file-list {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .question-card {
+      margin-bottom: 18px;
+      padding: 22px;
+      background: white;
+      border-radius: 10px;
+      border-left: 5px solid #0969da;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .question-title {
+      margin: 0 0 15px;
+      color: #24292f;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .answer-label {
+      margin: 0 0 8px;
+      color: #1a7f37;
+      font-weight: 700;
+    }
+
+    .answer-text {
+      margin: 0;
+      color: #3d444d;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 28px 0;
+    }
+
+    .pagination button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      background: #0969da;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pagination button:disabled {
+      background: #afb8c1;
+      cursor: not-allowed;
+    }
+
+    .page-info {
+      font-weight: 600;
+    }
+
+    .message {
+      padding: 18px;
+      background: white;
+      border-radius: 8px;
+      color: #57606a;
+    }
+
+    .error {
+      color: #cf222e;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .question-card {
+        padding: 17px;
+      }
+
+      .pagination {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <section class="header">
+      <a href="index.html" class="back-link">
+        ← Add New Question
+      </a>
+
+      <h1>Interview Questions</h1>
+
+      <p>
+        Select a category and file to view its questions
+        and answers.
+      </p>
+
+      <div id="breadcrumb" class="breadcrumb">
+        Categories
+      </div>
+    </section>
+
+    <section id="categorySection">
+      <h2 class="section-title">Categories</h2>
+
+      <div
+        id="categoryList"
+        class="category-grid"
+      ></div>
+    </section>
+
+    <section
+      id="fileSection"
+      class="hidden"
+    >
+      <h2 class="section-title">
+        Select a File
+      </h2>
+
+      <div
+        id="fileList"
+        class="file-list"
+      ></div>
+    </section>
+
+    <section
+      id="questionSection"
+      class="hidden"
+    >
+      <h2
+        id="questionHeading"
+        class="section-title"
+      >
+        Questions
+      </h2>
+
+      <div id="questionList"></div>
+
+      <div
+        id="pagination"
+        class="pagination hidden"
+      >
+        <button
+          id="previousButton"
+          type="button"
+        >
+          Previous
+        </button>
+
+        <span
+          id="pageInformation"
+          class="page-info"
+        ></span>
+
+        <button
+          id="nextButton"
+          type="button"
+        >
+          Next
+        </button>
+      </div>
+    </section>
+
+    <p id="message" class="message">
+      Loading categories...
+    </p>
+  </main>
+
+  <script>
+    const githubOwner = "Ankitadd11";
+    const githubRepository =
+      "interview-question-bank";
+
+    const questionsPerPage = 5;
+
+    const categoryNames = {
+      React: "React",
+      Angular: "Angular",
+      NodeJS: "Node.js",
+      TypeScript: "TypeScript",
+      JavaScript: "JavaScript",
+      Microservices: "Microservices",
+      "Micro-Frontend": "Micro-Frontend",
+      AI: "AI",
+      AWS: "AWS",
+      "DevOps-Infrastructure":
+        "DevOps & Infrastructure",
+      "System-Design": "System Design",
+      Behavioural: "Behavioural",
+      "Project-Based": "Project-Based"
+    };
+
+    const categoryList =
+      document.getElementById("categoryList");
+
+    const categorySection =
+      document.getElementById("categorySection");
+
+    const fileSection =
+      document.getElementById("fileSection");
+
+    const fileList =
+      document.getElementById("fileList");
+
+    const questionSection =
+      document.getElementById("questionSection");
+
+    const questionList =
+      document.getElementById("questionList");
+
+    const questionHeading =
+      document.getElementById("questionHeading");
+
+    const pagination =
+      document.getElementById("pagination");
+
+    const previousButton =
+      document.getElementById("previousButton");
+
+    const nextButton =
+      document.getElementById("nextButton");
+
+    const pageInformation =
+      document.getElementById("pageInformation");
+
+    const breadcrumb =
+      document.getElementById("breadcrumb");
+
+    const message =
+      document.getElementById("message");
+
+    let selectedCategory = "";
+    let selectedFile = "";
+    let questions = [];
+    let currentPage = 1;
+
+    async function githubRequest(path) {
+      const url =
+        `https://api.github.com/repos/` +
+        `${githubOwner}/${githubRepository}` +
+        `/contents/${path}`;
+
+      const response = await fetch(url, {
+        headers: {
+          Accept: "application/vnd.github+json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          "Unable to load data from GitHub."
+        );
+      }
+
+      return response.json();
+    }
+
+    async function loadCategories() {
+      try {
+        const items = await githubRequest(
+          "questions"
+        );
+
+        const categories = items
+          .filter(item => item.type === "dir")
+          .sort((first, second) =>
+            first.name.localeCompare(second.name)
+          );
+
+        categoryList.innerHTML = "";
+
+        categories.forEach(category => {
+          const button =
+            document.createElement("button");
+
+          button.type = "button";
+          button.className = "category-button";
+
+          button.textContent =
+            categoryNames[category.name] ||
+            category.name.replaceAll("-", " ");
+
+          button.addEventListener("click", () => {
+            loadFiles(category.name);
+          });
+
+          categoryList.appendChild(button);
+        });
+
+        message.classList.add("hidden");
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    async function loadFiles(category) {
+      selectedCategory = category;
+      selectedFile = "";
+
+      fileSection.classList.remove("hidden");
+      questionSection.classList.add("hidden");
+
+      breadcrumb.textContent =
+        `Categories → ` +
+        `${categoryNames[category] || category}`;
+
+      fileList.innerHTML = "";
+
+      showLoading("Loading files...");
+
+      try {
+        const items = await githubRequest(
+          `questions/${category}`
+        );
+
+        const files = items
+          .filter(
+            item =>
+              item.type === "file" &&
+              item.name.toLowerCase().endsWith(".md")
+          )
+          .sort((first, second) =>
+            first.name.localeCompare(second.name)
+          );
+
+        files.forEach(file => {
+          const button =
+            document.createElement("button");
+
+          button.type = "button";
+          button.className = "file-button";
+
+          button.textContent = formatFileName(
+            file.name
+          );
+
+          button.addEventListener("click", () => {
+            loadQuestions(category, file.name);
+          });
+
+          fileList.appendChild(button);
+        });
+
+        if (files.length === 0) {
+          showError(
+            "No question files were found."
+          );
+        } else {
+          message.classList.add("hidden");
+        }
+
+        fileSection.scrollIntoView({
+          behavior: "smooth"
+        });
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    async function loadQuestions(
+      category,
+      fileName
+    ) {
+      selectedCategory = category;
+      selectedFile = fileName;
+      currentPage = 1;
+
+      showLoading("Loading questions...");
+
+      try {
+        const fileData = await githubRequest(
+          `questions/${category}/${fileName}`
+        );
+
+        const content = decodeBase64Unicode(
+          fileData.content || ""
+        );
+
+        questions = parseQuestions(content);
+
+        questionHeading.textContent =
+          `${categoryNames[category] || category}` +
+          ` — ${formatFileName(fileName)}`;
+
+        breadcrumb.textContent =
+          `Categories → ` +
+          `${categoryNames[category] || category}` +
+          ` → ${formatFileName(fileName)}`;
+
+        questionSection.classList.remove(
+          "hidden"
+        );
+
+        message.classList.add("hidden");
+
+        renderQuestions();
+
+        questionSection.scrollIntoView({
+          behavior: "smooth"
+        });
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function parseQuestions(content) {
+      const sections = content.split(
+        /(?=^(?:##\s*)?Q\d+\.)/gm
+      );
+
+      return sections
+        .map(section => section.trim())
+        .filter(section =>
+          /^(?:##\s*)?Q\d+\./.test(section)
+        )
+        .map(section => {
+          const headingMatch = section.match(
+            /^(?:##\s*)?Q(\d+)\.\s*(.*)/
+          );
+
+          if (!headingMatch) {
+            return null;
+          }
+
+          const questionNumber =
+            Number(headingMatch[1]);
+
+          const questionText =
+            headingMatch[2].trim();
+
+          const remainingContent =
+            section.slice(
+              headingMatch[0].length
+            );
+
+          const answerMarker =
+            remainingContent.match(
+              /\n+(?:###\s*)?(?:Ans|Answer)\s*:?\s*\n?/i
+            );
+
+          let answerText =
+            "No answer has been added.";
+
+          if (answerMarker) {
+            answerText = remainingContent
+              .slice(
+                answerMarker.index +
+                answerMarker[0].length
+              )
+              .replace(/\n*---\s*$/g, "")
+              .trim();
+          }
+
+          return {
+            number: questionNumber,
+            question: questionText,
+            answer: answerText
+          };
+        })
+        .filter(Boolean)
+        .sort(
+          (first, second) =>
+            first.number - second.number
+        );
+    }
+
+    function renderQuestions() {
+      questionList.innerHTML = "";
+
+      if (questions.length === 0) {
+        questionList.innerHTML =
+          '<p class="message">' +
+          "No questions have been added to this file." +
+          "</p>";
+
+        pagination.classList.add("hidden");
+        return;
+      }
+
+      const totalPages = Math.ceil(
+        questions.length / questionsPerPage
+      );
+
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      const startIndex =
+        (currentPage - 1) * questionsPerPage;
+
+      const currentQuestions =
+        questions.slice(
+          startIndex,
+          startIndex + questionsPerPage
+        );
+
+      currentQuestions.forEach(item => {
+        const card =
+          document.createElement("article");
+
+        card.className = "question-card";
+
+        const questionTitle =
+          document.createElement("h3");
+
+        questionTitle.className =
+          "question-title";
+
+        questionTitle.textContent =
+          `Q${item.number}. ${item.question}`;
+
+        const answerLabel =
+          document.createElement("p");
+
+        answerLabel.className =
+          "answer-label";
+
+        answerLabel.textContent = "Answer";
+
+        const answerText =
+          document.createElement("p");
+
+        answerText.className = "answer-text";
+        answerText.textContent = item.answer;
+
+        card.appendChild(questionTitle);
+        card.appendChild(answerLabel);
+        card.appendChild(answerText);
+
+        questionList.appendChild(card);
+      });
+
+      pageInformation.textContent =
+        `Page ${currentPage} of ${totalPages} ` +
+        `(${questions.length} questions)`;
+
+      previousButton.disabled =
+        currentPage === 1;
+
+      nextButton.disabled =
+        currentPage === totalPages;
+
+      pagination.classList.toggle(
+        "hidden",
+        totalPages <= 1
+      );
+    }
+
+    previousButton.addEventListener(
+      "click",
+      () => {
+        if (currentPage > 1) {
+          currentPage -= 1;
+          renderQuestions();
+
+          questionSection.scrollIntoView({
+            behavior: "smooth"
+          });
+        }
+      }
+    );
+
+    nextButton.addEventListener(
+      "click",
+      () => {
+        const totalPages = Math.ceil(
+          questions.length / questionsPerPage
+        );
+
+        if (currentPage < totalPages) {
+          currentPage += 1;
+          renderQuestions();
+
+          questionSection.scrollIntoView({
+            behavior: "smooth"
+          });
+        }
+      }
+    );
+
+    function formatFileName(fileName) {
+      return fileName
+        .replace(/\.md$/i, "")
+        .replaceAll("-", " ")
+        .replace(/\b\w/g, letter =>
+          letter.toUpperCase()
+        );
+    }
+
+    function decodeBase64Unicode(value) {
+      const binary = atob(
+        value.replace(/\n/g, "")
+      );
+
+      const bytes = Uint8Array.from(
+        binary,
+        character => character.charCodeAt(0)
+      );
+
+      return new TextDecoder().decode(bytes);
+    }
+
+    function showLoading(text) {
+      message.className = "message";
+      message.textContent = text;
+    }
+
+    function showError(text) {
+      message.className = "message error";
+      message.textContent = text;
+    }
+
+    loadCategories();
+  </script>
+</body>
+</html>
