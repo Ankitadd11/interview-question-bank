@@ -8,8 +8,8 @@
     content="width=device-width, initial-scale=1.0"
   >
 <link
+  href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css"
 >
   
   <title>Interview Question Bank</title>
@@ -26,6 +26,26 @@
       color: #24292f;
       font-family: Arial, sans-serif;
     }
+
+    #answerEditor {
+  min-height: 220px;
+  background: white;
+}
+
+.ql-toolbar {
+  margin-top: 0;
+  border-radius: 6px 6px 0 0;
+}
+
+.ql-container {
+  min-height: 220px;
+  border-radius: 0 0 6px 6px;
+  font-size: 16px;
+}
+
+.ql-editor {
+  min-height: 220px;
+}
 
     .view-link {
   display: inline-block;
@@ -168,11 +188,7 @@
 
       <label for="answer">Answer</label>
 
-      <textarea
-        id="answer"
-        placeholder="Enter the answer"
-        required
-      ></textarea>
+   <div id="answerEditor"></div>
 
       <label for="appPassword">App Password</label>
 
@@ -191,8 +207,85 @@
       <p id="message" role="status"></p>
     </form>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
   <script>
+    const answerEditor = new Quill(
+  "#answerEditor",
+  {
+    theme: "snow",
+
+    placeholder: "Enter the answer",
+
+    modules: {
+      toolbar: [
+        [
+          {
+            header: [
+              1,
+              2,
+              3,
+              false
+            ]
+          }
+        ],
+
+        [
+          "bold",
+          "italic",
+          "underline",
+          "strike"
+        ],
+
+        [
+          {
+            color: []
+          },
+          {
+            background: []
+          }
+        ],
+
+        [
+          {
+            list: "ordered"
+          },
+          {
+            list: "bullet"
+          }
+        ],
+
+        [
+          {
+            indent: "-1"
+          },
+          {
+            indent: "+1"
+          }
+        ],
+
+        [
+          {
+            align: []
+          }
+        ],
+
+        [
+          "blockquote",
+          "code-block"
+        ],
+
+        [
+          "link"
+        ],
+
+        [
+          "clean"
+        ]
+      ]
+    }
+  }
+);
     const answerEditor = new EasyMDE({
   element: document.getElementById("answer"),
 
@@ -345,8 +438,8 @@
           .value
           .trim();
 
-        const answer = answerEditor
-  .value()
+       const answer = answerEditor
+  .getSemanticHTML()
   .trim();
 
         const appPassword = document
@@ -357,7 +450,7 @@
           !category ||
           !file ||
           !question ||
-          !answer ||
+          !answerText ||
           !appPassword
         ) {
           messageElement.style.color = "#cf222e";
@@ -414,7 +507,8 @@
             .getElementById("question")
             .value = "";
 
-         answerEditor.value("");
+        
+          answerEditor.setText("");
           
           document
             .getElementById("question")
