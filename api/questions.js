@@ -11,6 +11,7 @@ const ALLOWED_CATEGORIES = new Set([
   "Micro-Frontend",
   "AI",
   "AWS",
+  "DevOps-Infrastructure",
   "System-Design",
   "Behavioural",
   "Project-Based"
