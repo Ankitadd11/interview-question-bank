@@ -3,11 +3,13 @@ const REPOSITORY = "interview-question-bank";
 
 const ALLOWED_CATEGORIES = new Set([
   "React",
+  "Angular",
   "NodeJS",
   "TypeScript",
   "JavaScript",
   "Microservices",
   "Micro-Frontend",
+  "AI",
   "AWS",
   "System-Design",
   "Behavioural",
