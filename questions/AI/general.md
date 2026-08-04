@@ -1,1 +1,6 @@
+Q1. How have you integrated AI tools like LLMs or Generative AI into your software solutions?
 
+Ans: With a certification in Generative AI through upGrad and hands-on exposure to Large Language Models (LLMs), I have actively explored integrating AI tools into software applications. One significant application was during a concept proof for Azure OCR using FastAPI, where I used AI to optimize document recognition and processing workflows.
+My approach involves leveraging AI APIs such as Azure OpenAI and integrating language models into backend services to automate tasks like text extraction, chatbot functionalities, and intelligent data validation. This integration improves user experience by providing conversational interfaces or automating routine workflows.
+In developing scalable backend systems with Nest.js and Node.js, I design API endpoints that support AI-powered features, such as response generation or predictive analytics. This further allows seamless integration of AI-powered insights with existing business logic.
+Overall, my experience combines practical implementations with a strong theoretical foundation in AI, enabling me to build real-world applications that incorporate modern AI tools effectively and securely.
