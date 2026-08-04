@@ -11,7 +11,7 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css"
 >
-  <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+  
   <title>Interview Question Bank</title>
 
   <style>
@@ -191,8 +191,35 @@
       <p id="message" role="status"></p>
     </form>
   </main>
-
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
   <script>
+    const answerEditor = new EasyMDE({
+  element: document.getElementById("answer"),
+
+  placeholder: "Enter the answer",
+
+  spellChecker: false,
+
+  status: false,
+
+  minHeight: "180px",
+
+  toolbar: [
+    "bold",
+    "italic",
+    "heading",
+    "|",
+    "unordered-list",
+    "ordered-list",
+    "|",
+    "link",
+    "code",
+    "|",
+    "preview",
+    "side-by-side",
+    "fullscreen"
+  ]
+});
     const githubOwner = "Ankitadd11";
     const githubRepository = "interview-question-bank";
 
