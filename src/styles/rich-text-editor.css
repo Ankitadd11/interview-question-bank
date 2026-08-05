@@ -1,0 +1,27 @@
+.rich-text-editor {
+  min-height: 220px;
+  background: #ffffff;
+}
+
+.ql-toolbar {
+  border-radius: 6px 6px 0 0;
+  background: #f6f8fa;
+}
+
+.ql-container {
+  min-height: 220px;
+
+  border-radius: 0 0 6px 6px;
+
+  font-size: 16px;
+}
+
+.ql-editor {
+  min-height: 220px;
+
+  line-height: 1.6;
+}
+
+.ql-editor a {
+  color: #0969da;
+}

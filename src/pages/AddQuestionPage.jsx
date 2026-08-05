@@ -1,9 +1,13 @@
 import {
   useEffect,
+  useRef,
   useState
 } from "react";
 
 import { Link } from "react-router-dom";
+
+import RichTextEditor
+  from "../components/RichTextEditor";
 
 import CategorySelect
   from "../components/CategorySelect";
@@ -24,6 +28,18 @@ function AddQuestionPage() {
 
   const [files, setFiles] =
     useState([]);
+
+  const [question, setQuestion] =
+    useState("");
+
+  const [answer, setAnswer] =
+    useState({
+      text: "",
+      html: ""
+    });
+
+  const editorRef =
+    useRef(null);
 
   const [category, setCategory] =
     useState("");
@@ -134,7 +150,7 @@ function AddQuestionPage() {
           <Link
             to="/categories/add"
             className=
-              "button secondary-button"
+            "button secondary-button"
           >
             + Add Category
           </Link>
@@ -142,7 +158,7 @@ function AddQuestionPage() {
           <Link
             to="/questions"
             className=
-              "button link-button"
+            "button link-button"
           >
             View Existing Questions
           </Link>
@@ -173,6 +189,37 @@ function AddQuestionPage() {
             loading={loadingFiles}
             category={category}
           />
+          <div className="form-group">
+            <label htmlFor="question">
+              Question
+            </label>
+
+            <textarea
+              id="question"
+              value={question}
+              onChange={event =>
+                setQuestion(
+                  event.target.value
+                )
+              }
+              placeholder=
+              "Enter the interview question"
+              rows="4"
+              required
+            />
+          </div>
+
+
+          <div className="form-group">
+            <label>
+              Answer
+            </label>
+
+            <RichTextEditor
+              ref={editorRef}
+              onChange={setAnswer}
+            />
+          </div>
 
           {error && (
             <p className="error-message">
