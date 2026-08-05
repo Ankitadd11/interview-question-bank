@@ -26,6 +26,10 @@ const RichTextEditor = forwardRef(
     },
     ref
   ) {
+
+    const wrapperRef =
+      useRef(null);
+
     const editorContainerRef =
       useRef(null);
 
@@ -37,130 +41,150 @@ const RichTextEditor = forwardRef(
 
 
     /*
-     * Keep latest onChange function
-     * without recreating Quill.
+     * Keep latest callback without
+     * recreating Quill.
      */
+
     useEffect(() => {
-      onChangeRef.current = onChange;
+      onChangeRef.current =
+        onChange;
     }, [onChange]);
 
 
     /*
-     * Create Quill once.
+     * Initialize Quill.
      */
+
     useEffect(() => {
-      if (!editorContainerRef.current) {
+
+      if (
+        !editorContainerRef.current
+      ) {
         return;
       }
 
 
-      const quill = new Quill(
-        editorContainerRef.current,
-        {
-          theme: "snow",
+      const editorElement =
+        editorContainerRef.current;
 
-          placeholder:
-            "Enter the answer",
 
-          modules: {
-            toolbar: [
-              [
-                {
-                  header: [
-                    1,
-                    2,
-                    3,
-                    false
-                  ]
-                }
-              ],
+      const quill =
+        new Quill(
+          editorElement,
+          {
+            theme: "snow",
 
-              [
-                "bold",
-                "italic",
-                "underline",
-                "strike"
-              ],
+            placeholder:
+              "Enter the answer",
 
-              [
-                {
-                  color: []
-                },
+            modules: {
+              toolbar: [
 
-                {
-                  background: []
-                }
-              ],
+                [
+                  {
+                    header: [
+                      1,
+                      2,
+                      3,
+                      false
+                    ]
+                  }
+                ],
 
-              [
-                {
-                  list: "ordered"
-                },
+                [
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strike"
+                ],
 
-                {
-                  list: "bullet"
-                }
-              ],
+                [
+                  {
+                    color: []
+                  },
 
-              [
-                {
-                  indent: "-1"
-                },
+                  {
+                    background: []
+                  }
+                ],
 
-                {
-                  indent: "+1"
-                }
-              ],
+                [
+                  {
+                    list: "ordered"
+                  },
 
-              [
-                {
-                  align: []
-                }
-              ],
+                  {
+                    list: "bullet"
+                  }
+                ],
 
-              [
-                "blockquote",
-                "code-block"
-              ],
+                [
+                  {
+                    indent: "-1"
+                  },
 
-              [
-                "link"
-              ],
+                  {
+                    indent: "+1"
+                  }
+                ],
 
-              [
-                "clean"
+                [
+                  {
+                    align: []
+                  }
+                ],
+
+                [
+                  "blockquote",
+                  "code-block"
+                ],
+
+                [
+                  "link"
+                ],
+
+                [
+                  "clean"
+                ]
+
               ]
-            ]
+            }
           }
-        }
-      );
+        );
 
 
-      quillRef.current = quill;
+      quillRef.current =
+        quill;
 
 
       /*
-       * Whenever the editor changes,
-       * give both HTML and plain text
-       * back to the parent.
+       * Send editor contents
+       * to AddQuestionPage.
        */
-      const handleTextChange = () => {
-        const text =
-          quill
-            .getText()
-            .trim();
 
-        const html =
-          normalizeHtml(
-            quill.getSemanticHTML()
-          );
+      const handleTextChange =
+        () => {
+
+          const text =
+            quill
+              .getText()
+              .trim();
 
 
-        onChangeRef.current?.({
-          text,
-          html
-        });
-      };
+          const html =
+            normalizeHtml(
+              quill
+                .getSemanticHTML()
+            );
+
+
+          onChangeRef
+            .current?.({
+              text,
+              html
+            });
+
+        };
 
 
       quill.on(
@@ -169,46 +193,109 @@ const RichTextEditor = forwardRef(
       );
 
 
+      /*
+       * Cleanup is especially
+       * important because React
+       * StrictMode mounts twice
+       * during development.
+       */
+
       return () => {
+
         quill.off(
           "text-change",
           handleTextChange
         );
 
-        quillRef.current = null;
 
-        if (editorContainerRef.current) {
-          editorContainerRef.current.innerHTML =
-            "";
+        quillRef.current =
+          null;
+
+
+        /*
+         * Quill automatically puts
+         * the toolbar immediately
+         * before the editor.
+         *
+         * Remove it during cleanup.
+         */
+
+        const toolbar =
+          editorElement
+            .previousElementSibling;
+
+
+        if (
+          toolbar &&
+          toolbar.classList.contains(
+            "ql-toolbar"
+          )
+        ) {
+          toolbar.remove();
         }
+
+
+        /*
+         * Reset editor DOM so Quill
+         * can initialize cleanly.
+         */
+
+        editorElement.innerHTML =
+          "";
+
+        editorElement.className =
+          "rich-text-editor";
+
       };
+
     }, []);
 
 
     /*
-     * Parent can call:
-     *
-     * editorRef.current.clear()
-     *
-     * after successful submission.
+     * Methods available to parent.
      */
+
     useImperativeHandle(
       ref,
       () => ({
+
         clear() {
-          quillRef.current?.setText("");
+
+          if (
+            quillRef.current
+          ) {
+            quillRef
+              .current
+              .setText("");
+          }
+
         }
+
       }),
       []
     );
 
 
     return (
+
       <div
-        ref={editorContainerRef}
-        className="rich-text-editor"
-      />
+        ref={wrapperRef}
+        className=
+          "rich-text-editor-wrapper"
+      >
+
+        <div
+          ref={
+            editorContainerRef
+          }
+          className=
+            "rich-text-editor"
+        />
+
+      </div>
+
     );
+
   }
 );
 
