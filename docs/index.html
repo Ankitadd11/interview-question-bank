@@ -627,10 +627,11 @@
          * Formatted HTML is saved.
          */
 
-        const answer =
-          answerEditor
-            .getSemanticHTML()
-            .trim();
+       const answer = answerEditor
+  .getSemanticHTML()
+  .replace(/&nbsp;/gi, " ")
+  .replace(/\u00A0/g, " ")
+  .trim();
 
 
         const appPassword =
