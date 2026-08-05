@@ -7,13 +7,14 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-<link
-  
-  href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
-  rel="stylesheet"
->
-  
+
   <title>Interview Question Bank</title>
+
+  <!-- Quill Rich Text Editor -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+    rel="stylesheet"
+  >
 
   <style>
     * {
@@ -28,39 +29,8 @@
       font-family: Arial, sans-serif;
     }
 
-    #answerEditor {
-  min-height: 220px;
-  background: white;
-}
-
-.ql-toolbar {
-  margin-top: 0;
-  border-radius: 6px 6px 0 0;
-}
-
-.ql-container {
-  min-height: 220px;
-  border-radius: 0 0 6px 6px;
-  font-size: 16px;
-}
-
-.ql-editor {
-  min-height: 220px;
-}
-
-    .view-link {
-  display: inline-block;
-  margin-bottom: 18px;
-  color: #0969da;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.view-link:hover {
-  text-decoration: underline;
-}
     .container {
-      max-width: 720px;
+      max-width: 850px;
       margin: auto;
       padding: 30px;
       background: white;
@@ -73,8 +43,20 @@
     }
 
     .description {
-      margin-bottom: 24px;
+      margin-bottom: 10px;
       color: #57606a;
+    }
+
+    .view-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #0969da;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .view-link:hover {
+      text-decoration: underline;
     }
 
     label {
@@ -105,7 +87,36 @@
       outline: 2px solid rgba(9, 105, 218, 0.2);
     }
 
-    button {
+    /* Quill Editor */
+
+    #answerEditor {
+      min-height: 220px;
+      background: white;
+    }
+
+    .ql-toolbar {
+      border-radius: 6px 6px 0 0;
+      background: #f6f8fa;
+    }
+
+    .ql-container {
+      min-height: 220px;
+      border-radius: 0 0 6px 6px;
+      font-size: 16px;
+    }
+
+    .ql-editor {
+      min-height: 220px;
+      line-height: 1.6;
+    }
+
+    .ql-editor a {
+      color: #0969da;
+    }
+
+    /* Submit button */
+
+    #submitButton {
       width: 100%;
       margin-top: 24px;
       padding: 13px;
@@ -118,11 +129,11 @@
       cursor: pointer;
     }
 
-    button:hover {
+    #submitButton:hover {
       background: #218739;
     }
 
-    button:disabled {
+    #submitButton:disabled {
       background: #94d3a2;
       cursor: wait;
     }
@@ -132,54 +143,126 @@
       margin-top: 16px;
       font-weight: 600;
     }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 10px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 
 <body>
+
   <main class="container">
+
     <h1>Interview Question Bank</h1>
 
     <p class="description">
       Select a category and file, then enter the interview
       question and answer.
     </p>
-    <p>
-  <a href="questions.html" class="view-link">
-    View Existing Interview Questions →
-  </a>
-</p>
+
+    <a
+      href="questions.html"
+      class="view-link"
+    >
+      View Existing Interview Questions →
+    </a>
 
     <form id="questionForm">
-      <label for="category">Category</label>
 
-  <select id="category" required>
-  <option value="">Select a category</option>
-  <option value="React">React</option>
-  <option value="Angular">Angular</option>
-  <option value="NodeJS">Node.js</option>
-  <option value="TypeScript">TypeScript</option>
-  <option value="JavaScript">JavaScript</option>
-  <option value="Microservices">Microservices</option>
-  <option value="Micro-Frontend">Micro-Frontend</option>
-  <option value="AI">AI</option>
-  <option value="AWS">AWS</option>
-  <option value="System-Design">System Design</option>
-  <option value="Behavioural">Behavioural</option>
-  <option value="Project-Based">Project-Based</option>
-    <option value="DevOps-Infrastructure">
-  DevOps & Infrastructure
-</option>
-</select>
+      <!-- Category -->
 
-      <label for="file">File</label>
+      <label for="category">
+        Category
+      </label>
 
-      <select id="file" required disabled>
+      <select id="category" required>
+
+        <option value="">
+          Select a category
+        </option>
+
+        <option value="React">
+          React
+        </option>
+
+        <option value="Angular">
+          Angular
+        </option>
+
+        <option value="NodeJS">
+          Node.js
+        </option>
+
+        <option value="TypeScript">
+          TypeScript
+        </option>
+
+        <option value="JavaScript">
+          JavaScript
+        </option>
+
+        <option value="Microservices">
+          Microservices
+        </option>
+
+        <option value="Micro-Frontend">
+          Micro-Frontend
+        </option>
+
+        <option value="AI">
+          AI
+        </option>
+
+        <option value="AWS">
+          AWS
+        </option>
+
+        <option value="DevOps-Infrastructure">
+          DevOps & Infrastructure
+        </option>
+
+        <option value="System-Design">
+          System Design
+        </option>
+
+        <option value="Behavioural">
+          Behavioural
+        </option>
+
+        <option value="Project-Based">
+          Project-Based
+        </option>
+
+      </select>
+
+      <!-- File -->
+
+      <label for="file">
+        File
+      </label>
+
+      <select
+        id="file"
+        required
+        disabled
+      >
         <option value="">
           Select a category first
         </option>
       </select>
 
-      <label for="question">Question</label>
+      <!-- Question -->
+
+      <label for="question">
+        Question
+      </label>
 
       <textarea
         id="question"
@@ -187,11 +270,22 @@
         required
       ></textarea>
 
-      <label for="answer">Answer</label>
+      <!-- Answer -->
 
-   <div id="answerEditor"></div>
+      <label id="answerLabel">
+        Answer
+      </label>
 
-      <label for="appPassword">App Password</label>
+      <div
+        id="answerEditor"
+        aria-labelledby="answerLabel"
+      ></div>
+
+      <!-- Password -->
+
+      <label for="appPassword">
+        App Password
+      </label>
 
       <input
         id="appPassword"
@@ -201,95 +295,46 @@
         required
       >
 
-      <button id="submitButton" type="submit">
+      <!-- Submit -->
+
+      <button
+        id="submitButton"
+        type="submit"
+      >
         Add Question
       </button>
 
-      <p id="message" role="status"></p>
+      <p
+        id="message"
+        role="status"
+      ></p>
+
     </form>
+
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
+  <!-- Quill Library -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"
+  ></script>
+
   <script>
-    const answerEditor = new Quill(
-  "#answerEditor",
-  {
-    theme: "snow",
 
-    placeholder: "Enter the answer",
+    /*
+     * GitHub configuration
+     */
 
-    modules: {
-      toolbar: [
-        [
-          {
-            header: [
-              1,
-              2,
-              3,
-              false
-            ]
-          }
-        ],
+    const githubOwner =
+      "Ankitadd11";
 
-        [
-          "bold",
-          "italic",
-          "underline",
-          "strike"
-        ],
+    const githubRepository =
+      "interview-question-bank";
 
-        [
-          {
-            color: []
-          },
-          {
-            background: []
-          }
-        ],
 
-        [
-          {
-            list: "ordered"
-          },
-          {
-            list: "bullet"
-          }
-        ],
-
-        [
-          {
-            indent: "-1"
-          },
-          {
-            indent: "+1"
-          }
-        ],
-
-        [
-          {
-            align: []
-          }
-        ],
-
-        [
-          "blockquote",
-          "code-block"
-        ],
-
-        [
-          "link"
-        ],
-
-        [
-          "clean"
-        ]
-      ]
-    }
-  }
-);
- 
-    const githubOwner = "Ankitadd11";
-    const githubRepository = "interview-question-bank";
+    /*
+     * Page elements
+     */
 
     const categoryElement =
       document.getElementById("category");
@@ -306,31 +351,126 @@
     const submitButton =
       document.getElementById("submitButton");
 
+
+    /*
+     * Quill editor
+     */
+
+    const answerEditor = new Quill(
+      "#answerEditor",
+      {
+        theme: "snow",
+
+        placeholder:
+          "Enter the answer",
+
+        modules: {
+          toolbar: [
+
+            [
+              {
+                header: [
+                  1,
+                  2,
+                  3,
+                  false
+                ]
+              }
+            ],
+
+            [
+              "bold",
+              "italic",
+              "underline",
+              "strike"
+            ],
+
+            [
+              {
+                color: []
+              },
+              {
+                background: []
+              }
+            ],
+
+            [
+              {
+                list: "ordered"
+              },
+              {
+                list: "bullet"
+              }
+            ],
+
+            [
+              {
+                indent: "-1"
+              },
+              {
+                indent: "+1"
+              }
+            ],
+
+            [
+              {
+                align: []
+              }
+            ],
+
+            [
+              "blockquote",
+              "code-block"
+            ],
+
+            [
+              "link"
+            ],
+
+            [
+              "clean"
+            ]
+
+          ]
+        }
+      }
+    );
+
+
+    /*
+     * Load files when category changes
+     */
+
     categoryElement.addEventListener(
       "change",
       loadFiles
     );
 
+
     async function loadFiles() {
-      const category = categoryElement.value;
+
+      const category =
+        categoryElement.value;
 
       fileElement.disabled = true;
 
       messageElement.textContent = "";
 
       if (!category) {
+
         fileElement.innerHTML =
           '<option value="">' +
-          "Select a category first" +
-          "</option>";
+          'Select a category first' +
+          '</option>';
 
         return;
       }
 
       fileElement.innerHTML =
         '<option value="">' +
-        "Loading files..." +
-        "</option>";
+        'Loading files...' +
+        '</option>';
+
 
       const apiUrl =
         `https://api.github.com/repos/` +
@@ -338,88 +478,172 @@
         `/contents/questions/` +
         encodeURIComponent(category);
 
+
       try {
-        const response = await fetch(apiUrl, {
-          headers: {
-            Accept: "application/vnd.github+json"
-          }
-        });
+
+        const response =
+          await fetch(
+            apiUrl,
+            {
+              headers: {
+                Accept:
+                  "application/vnd.github+json"
+              }
+            }
+          );
+
 
         if (!response.ok) {
+
           throw new Error(
             "Could not load files from this category."
           );
+
         }
 
-        const items = await response.json();
 
-        const markdownFiles = items.filter(
-          item =>
-            item.type === "file" &&
-            item.name.toLowerCase().endsWith(".md")
-        );
+        const items =
+          await response.json();
+
+
+        const markdownFiles =
+          items.filter(
+            item =>
+              item.type === "file" &&
+              item.name
+                .toLowerCase()
+                .endsWith(".md")
+          );
+
 
         fileElement.innerHTML =
           '<option value="">' +
-          "Select a file" +
-          "</option>";
+          'Select a file' +
+          '</option>';
 
-        markdownFiles.forEach(file => {
-          const option =
-            document.createElement("option");
 
-          option.value = file.name;
-          option.textContent = file.name;
+        markdownFiles.forEach(
+          file => {
 
-          fileElement.appendChild(option);
-        });
+            const option =
+              document.createElement(
+                "option"
+              );
 
-        if (markdownFiles.length === 0) {
+            option.value =
+              file.name;
+
+            option.textContent =
+              file.name;
+
+            fileElement.appendChild(
+              option
+            );
+
+          }
+        );
+
+
+        if (
+          markdownFiles.length === 0
+        ) {
+
           fileElement.innerHTML =
             '<option value="">' +
-            "No Markdown files found" +
-            "</option>";
+            'No Markdown files found' +
+            '</option>';
 
-          messageElement.style.color = "#cf222e";
+          messageElement.style.color =
+            "#cf222e";
 
           messageElement.textContent =
-            "No Markdown files were found in this category.";
+            "No Markdown files were found " +
+            "in this category.";
 
           return;
         }
 
-        fileElement.disabled = false;
+
+        fileElement.disabled =
+          false;
+
       } catch (error) {
+
         fileElement.innerHTML =
           '<option value="">' +
-          "Unable to load files" +
-          "</option>";
+          'Unable to load files' +
+          '</option>';
 
-        messageElement.style.color = "#cf222e";
-        messageElement.textContent = error.message;
+        messageElement.style.color =
+          "#cf222e";
+
+        messageElement.textContent =
+          error.message;
+
       }
+
     }
+
+
+    /*
+     * Submit question
+     */
 
     formElement.addEventListener(
       "submit",
       async event => {
+
         event.preventDefault();
 
-        const category = categoryElement.value;
-        const file = fileElement.value;
 
-        const question = document
-          .getElementById("question")
-          .value
-          .trim();
+        const category =
+          categoryElement.value;
 
-       const answer = answerEditor
-  .getSemanticHTML()
-  .trim();
+        const file =
+          fileElement.value;
 
-        const appPassword = document
-          .getElementById("appPassword")
-          .value;
+
+        const question =
+          document
+            .getElementById(
+              "question"
+            )
+            .value
+            .trim();
+
+
+        /*
+         * Plain text is used only
+         * for empty-answer validation.
+         */
+
+        const answerText =
+          answerEditor
+            .getText()
+            .trim();
+
+
+        /*
+         * Formatted HTML is saved.
+         */
+
+        const answer =
+          answerEditor
+            .getSemanticHTML()
+            .trim();
+
+
+        const appPassword =
+          document
+            .getElementById(
+              "appPassword"
+            )
+            .value;
+
+
+        /*
+         * Validation
+         */
 
         if (
           !category ||
@@ -428,75 +652,143 @@
           !answerText ||
           !appPassword
         ) {
-          messageElement.style.color = "#cf222e";
+
+          messageElement.style.color =
+            "#cf222e";
 
           messageElement.textContent =
             "Please complete every field.";
 
           return;
+
         }
 
-        submitButton.disabled = true;
+
+        /*
+         * Disable button while saving
+         */
+
+        submitButton.disabled =
+          true;
 
         submitButton.textContent =
           "Adding question...";
 
-        messageElement.textContent = "";
+        messageElement.textContent =
+          "";
+
 
         try {
-          const response = await fetch(
-            "/api/questions",
-            {
-              method: "POST",
 
-              headers: {
-                "Content-Type": "application/json",
-                "X-App-Password": appPassword
-              },
+          /*
+           * This calls the Vercel API
+           * when this page is running
+           * from Vercel.
+           */
 
-              body: JSON.stringify({
-                category,
-                file,
-                question,
-                answer
-              })
-            }
-          );
+          const response =
+            await fetch(
+              "/api/questions",
+              {
+                method: "POST",
 
-          const result = await response.json();
+                headers: {
+                  "Content-Type":
+                    "application/json",
+
+                  "X-App-Password":
+                    appPassword
+                },
+
+                body: JSON.stringify({
+                  category,
+                  file,
+                  question,
+                  answer
+                })
+              }
+            );
+
+
+          const result =
+            await response.json();
+
 
           if (!response.ok) {
+
             throw new Error(
               result.error ||
               "Unable to add the question."
             );
+
           }
 
-          messageElement.style.color = "#1a7f37";
+
+          /*
+           * Success
+           */
+
+          messageElement.style.color =
+            "#1a7f37";
 
           messageElement.textContent =
-            `${result.questionNumber} added ` +
-            `successfully to ${result.path}.`;
+            `${result.questionNumber} ` +
+            `added successfully to ` +
+            `${result.path}.`;
+
+
+          /*
+           * Clear question
+           */
 
           document
-            .getElementById("question")
+            .getElementById(
+              "question"
+            )
             .value = "";
 
-        
+
+          /*
+           * Clear Quill editor
+           */
+
           answerEditor.setText("");
-          
+
+
+          /*
+           * Put cursor back
+           * into question field
+           */
+
           document
-            .getElementById("question")
+            .getElementById(
+              "question"
+            )
             .focus();
+
+
         } catch (error) {
-          messageElement.style.color = "#cf222e";
-          messageElement.textContent = error.message;
+
+          messageElement.style.color =
+            "#cf222e";
+
+          messageElement.textContent =
+            error.message;
+
         } finally {
-          submitButton.disabled = false;
-          submitButton.textContent = "Add Question";
+
+          submitButton.disabled =
+            false;
+
+          submitButton.textContent =
+            "Add Question";
+
         }
+
       }
     );
+
   </script>
+
 </body>
 </html>
