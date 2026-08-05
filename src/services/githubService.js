@@ -1,84 +1,85 @@
 const GITHUB_OWNER = "Ankitadd11";
+const GITHUB_REPO = "interview-question-bank";
 
-const GITHUB_REPOSITORY =
-  "interview-question-bank";
+const GITHUB_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
 
-const BASE_URL =
-  `https://api.github.com/repos/` +
-  `${GITHUB_OWNER}/${GITHUB_REPOSITORY}/contents`;
-
-async function githubRequest(path) {
-  const response = await fetch(
-    `${BASE_URL}/${path}`,
-    {
-      headers: {
-        Accept: "application/vnd.github+json"
-      }
-    }
-  );
+async function githubGet(path) {
+  const response = await fetch(`${GITHUB_API}/${path}`);
 
   if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error("GitHub file or folder was not found.");
+    }
+
     throw new Error(
-      `GitHub request failed: ${response.status}`
+      `Unable to read GitHub data. Status: ${response.status}`
     );
   }
 
   return response.json();
 }
 
-export async function getCategories() {
-  const items =
-    await githubRequest("questions");
-
-  return items
-    .filter(item => item.type === "dir")
-    .map(item => ({
-      value: item.name,
-
-      label: item.name
-        .replaceAll("-", " ")
-        .replace(
-          /\b\w/g,
-          letter => letter.toUpperCase()
-        )
-    }))
-    .sort((a, b) =>
-      a.label.localeCompare(b.label)
-    );
+function formatCategoryName(folderName) {
+  return folderName
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-export async function getCategoryFiles(
-  category
-) {
+export async function getCategories() {
+  const data = await githubGet("questions");
+
+  return data
+    .filter((item) => item.type === "dir")
+    .map((item) => ({
+      value: item.name,
+      label: formatCategoryName(item.name),
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+export async function getCategoryFiles(category) {
   if (!category) {
     return [];
   }
 
-  const items =
-    await githubRequest(
-      `questions/${encodeURIComponent(category)}`
-    );
+  const data = await githubGet(
+    `questions/${encodeURIComponent(category)}`
+  );
 
-  return items
+  return data
     .filter(
-      item =>
+      (item) =>
         item.type === "file" &&
-        item.name
-          .toLowerCase()
-          .endsWith(".md")
+        item.name.toLowerCase().endsWith(".md")
     )
-    .map(item => ({
+    .map((item) => ({
       value: item.name,
-
-      label: item.name
-        .replace(/\.md$/i, "")
-        .replaceAll("-", " ")
-        .replace(
-          /\b\w/g,
-          letter => letter.toUpperCase()
-        )
+      label: item.name,
     }))
-    .sort((a, b) =>
-      a.label.localeCompare(b.label)
-    );
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+export async function getQuestionFile(category, file) {
+  if (!category || !file) {
+    return "";
+  }
+
+  const data = await githubGet(
+    `questions/${encodeURIComponent(category)}/${encodeURIComponent(file)}`
+  );
+
+  if (!data.content) {
+    return "";
+  }
+
+  const base64Content = data.content.replace(/\n/g, "");
+
+  const binaryString = atob(base64Content);
+
+  const bytes = Uint8Array.from(
+    binaryString,
+    (character) => character.charCodeAt(0)
+  );
+
+  return new TextDecoder("utf-8").decode(bytes);
 }
