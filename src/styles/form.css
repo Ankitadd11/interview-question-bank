@@ -42,3 +42,52 @@
   background: #f6f8fa;
   color: #8c959f;
 }
+.submit-button {
+  width: 100%;
+
+  padding: 13px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #2da44e;
+  color: #ffffff;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #218739;
+}
+
+.submit-button:disabled {
+  background: #94d3a2;
+
+  cursor: wait;
+}
+
+.error-message {
+  margin: 0;
+
+  padding: 12px;
+
+  border-radius: 6px;
+
+  background: #ffebe9;
+
+  color: #cf222e;
+}
+
+.success-message {
+  margin: 0;
+
+  padding: 12px;
+
+  border-radius: 6px;
+
+  background: #dafbe1;
+
+  color: #116329;
+}
