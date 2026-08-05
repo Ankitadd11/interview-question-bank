@@ -431,13 +431,7 @@ function AddQuestionPage() {
 
         <div className="page-actions">
 
-          <Link
-            to="/categories/add"
-            className=
-              "button secondary-button"
-          >
-            + Add Category
-          </Link>
+      
 
 
           <Link
