@@ -35,11 +35,18 @@
 }
 
 .answer-text li {
-  margin-bottom: 7px;
+  margin-bottom: 8px;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .answer-text p {
   margin: 8px 0;
+}
+    .answer-text ul,
+.answer-text ol {
+  margin: 10px 0;
+  padding-left: 28px;
 }
 
 .answer-text code {
@@ -152,12 +159,16 @@
       font-weight: 700;
     }
 
-    .answer-text {
-      margin: 0;
-      color: #3d444d;
-      line-height: 1.65;
-      white-space: pre-wrap;
-    }
+  .answer-text {
+  margin: 0;
+  color: #3d444d;
+  line-height: 1.65;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+  max-width: 100%;
+}
+
 
     .pagination {
       display: flex;
