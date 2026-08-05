@@ -1,12 +1,43 @@
+import {
+  Navigate,
+  Route,
+  Routes
+} from "react-router-dom";
+
+import AddQuestionPage from "./pages/AddQuestionPage";
+import AddCategoryPage from "./pages/AddCategoryPage";
+import QuestionsPage from "./pages/QuestionsPage";
+
+import "./styles/pages.css";
+
 function App() {
   return (
-    <main className="app-container">
-      <h1>Interview Question Bank</h1>
+    <Routes>
+      <Route
+        path="/"
+        element={<AddQuestionPage />}
+      />
 
-      <p>
-        React application setup is working.
-      </p>
-    </main>
+      <Route
+        path="/categories/add"
+        element={<AddCategoryPage />}
+      />
+
+      <Route
+        path="/questions"
+        element={<QuestionsPage />}
+      />
+
+      <Route
+        path="*"
+        element={
+          <Navigate
+            to="/"
+            replace
+          />
+        }
+      />
+    </Routes>
   );
 }
 
