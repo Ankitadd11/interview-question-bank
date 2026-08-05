@@ -657,9 +657,19 @@
 
 answerText.className = "answer-text";
 
-answerText.innerHTML = DOMPurify.sanitize(
-  marked.parse(item.answer)
-);
+const normalizedAnswer = item.answer
+  .replace(/&nbsp;/gi, " ")
+  .replace(/\u00A0/g, " ");
+
+const containsHtml =
+  /<\/?[a-z][\s\S]*>/i.test(normalizedAnswer);
+
+const formattedAnswer = containsHtml
+  ? normalizedAnswer
+  : marked.parse(normalizedAnswer);
+
+answerText.innerHTML =
+  DOMPurify.sanitize(formattedAnswer);
 
         card.appendChild(questionTitle);
         card.appendChild(answerLabel);
