@@ -422,6 +422,13 @@ function AddQuestionPage() {
           </h1>
 
 
+          <p>
+            Add and manage your
+            interview questions.
+          </p>
+
+        </div>
+
 
         <div className="page-actions">
 
