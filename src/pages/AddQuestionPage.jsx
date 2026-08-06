@@ -431,13 +431,18 @@ function AddQuestionPage() {
 
         <div className="page-actions">
 
-      
 
 
           <Link
+            to="/categories/add"
+            className="secondary-button"
+          >
+            + Add Category / File
+          </Link>
+          <Link
             to="/questions"
             className=
-              "button link-button"
+            "button link-button"
           >
             View Existing Questions
           </Link>
@@ -523,7 +528,7 @@ function AddQuestionPage() {
               }
 
               placeholder=
-                "Enter the interview question"
+              "Enter the interview question"
 
               rows="4"
 
@@ -577,10 +582,10 @@ function AddQuestionPage() {
               }
 
               placeholder=
-                "Enter the app password"
+              "Enter the app password"
 
               autoComplete=
-                "current-password"
+              "current-password"
 
               required
             />

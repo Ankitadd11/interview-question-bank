@@ -1,15 +1,14 @@
 import {
   Navigate,
   Route,
-  Routes
+  Routes,
 } from "react-router-dom";
 
 import AddQuestionPage from "./pages/AddQuestionPage";
+import AddCategoryPage from "./pages/AddCategoryPage";
 import QuestionsPage from "./pages/QuestionsPage";
 
-import "./styles/pages.css";
-
-function App() {
+export default function App() {
   return (
     <Routes>
       <Route
@@ -17,7 +16,10 @@ function App() {
         element={<AddQuestionPage />}
       />
 
-    
+      <Route
+        path="/categories/add"
+        element={<AddCategoryPage />}
+      />
 
       <Route
         path="/questions"
@@ -36,5 +38,3 @@ function App() {
     </Routes>
   );
 }
-
-export default App;
