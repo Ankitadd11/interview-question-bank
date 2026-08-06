@@ -435,14 +435,13 @@ function AddQuestionPage() {
 
           <Link
             to="/categories/add"
-            className="secondary-button"
+            className="button secondary-button"
           >
             + Add Category / File
           </Link>
           <Link
             to="/questions"
-            className=
-            "button link-button"
+            className="button link-button"
           >
             View Existing Questions
           </Link>

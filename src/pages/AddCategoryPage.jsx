@@ -150,112 +150,113 @@ export default function AddCategoryPage() {
 
         <Link
           to="/"
-          className="secondary-button"
+          className="button link-button"
         >
           ← Add Question
         </Link>
       </div>
-
-      <form
-        className="question-form"
-        onSubmit={handleSubmit}
-      >
-        <div className="form-group">
-          <label htmlFor="category">
-            Category Name
-          </label>
-
-          <input
-            id="category"
-            type="text"
-            value={category}
-            onChange={(event) =>
-              setCategory(
-                event.target.value
-              )
-            }
-            placeholder="Example: NodeJS"
-            maxLength={80}
-            disabled={submitting}
-          />
-
-          <small>
-            Example: React, NodeJS,
-            Microservices
-          </small>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="filename">
-            File Name
-          </label>
-
-          <input
-            id="filename"
-            type="text"
-            value={filename}
-            onChange={(event) =>
-              setFilename(
-                event.target.value
-              )
-            }
-            placeholder="Example: technical"
-            maxLength={100}
-            disabled={submitting}
-          />
-
-          {normalizedFilename && (
-            <small>
-              File will be created as:{" "}
-              <strong>
-                {normalizedFilename}
-              </strong>
-            </small>
-          )}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="appPassword">
-            App Password
-          </label>
-
-          <input
-            id="appPassword"
-            type="password"
-            value={appPassword}
-            onChange={(event) =>
-              setAppPassword(
-                event.target.value
-              )
-            }
-            placeholder="Enter app password"
-            autoComplete="current-password"
-            disabled={submitting}
-          />
-        </div>
-
-        {error && (
-          <div className="form-message error-message">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="form-message success-message">
-            {success}
-          </div>
-        )}
-
-        <button
-          type="submit"
-          className="submit-button"
-          disabled={submitting}
+      <section className="content-card">
+        <form
+          className="question-form"
+          onSubmit={handleSubmit}
         >
-          {submitting
-            ? "Creating..."
-            : "Create Category / File"}
-        </button>
-      </form>
+          <div className="form-group">
+            <label htmlFor="category">
+              Category Name
+            </label>
+
+            <input
+              id="category"
+              type="text"
+              value={category}
+              onChange={(event) =>
+                setCategory(
+                  event.target.value
+                )
+              }
+              placeholder="Example: NodeJS"
+              maxLength={80}
+              disabled={submitting}
+            />
+
+            <small>
+              Example: React, NodeJS,
+              Microservices
+            </small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="filename">
+              File Name
+            </label>
+
+            <input
+              id="filename"
+              type="text"
+              value={filename}
+              onChange={(event) =>
+                setFilename(
+                  event.target.value
+                )
+              }
+              placeholder="Example: technical"
+              maxLength={100}
+              disabled={submitting}
+            />
+
+            {normalizedFilename && (
+              <small>
+                File will be created as:{" "}
+                <strong>
+                  {normalizedFilename}
+                </strong>
+              </small>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="appPassword">
+              App Password
+            </label>
+
+            <input
+              id="appPassword"
+              type="password"
+              value={appPassword}
+              onChange={(event) =>
+                setAppPassword(
+                  event.target.value
+                )
+              }
+              placeholder="Enter app password"
+              autoComplete="current-password"
+              disabled={submitting}
+            />
+          </div>
+
+          {error && (
+            <div className="form-message error-message">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="form-message success-message">
+              {success}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="submit-button"
+            disabled={submitting}
+          >
+            {submitting
+              ? "Creating..."
+              : "Create Category / File"}
+          </button>
+        </form>
+      </section>
     </main>
   );
 }
