@@ -1,16 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/docs/index.html"
-    },
-    {
-      "source": "/index.html",
-      "destination": "/docs/index.html"
-    },
-    {
-      "source": "/questions.html",
-      "destination": "/docs/questions.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
